@@ -169,6 +169,11 @@ Represents connector types
 | color        | int          | color.id         |                                            | Yes      |
 | pluggable    | bit          |                  | If the connector is pluggable or hardwired | No       |
 
+## connectorTypeMating
+
+which connectors mate with which other connectors
+
+<https://dba.stackexchange.com/a/48663/185504>
 ## equipment
 
 Represents a piece of equipment.
