@@ -12,7 +12,7 @@ in connection object.
 may want concept of route that connections can be bundled into
 
 ## Connection
-concept of "connection" is an interconnection between two connectors.
+concept of "connection" is an interconnection between two or more connectors.
 
 connection can have:
 -   length
@@ -20,6 +20,10 @@ connection can have:
 -   type (temporary, permanent, virtual)
 
 connector types are assigned by which connector the connection is connected to.
+
+connection contains logic to validate IO direction and gender
+
+Optionally contains pin mapping data for breakout cables
 
 ## Equipment
 
@@ -35,22 +39,28 @@ Equipment can have:
 -   manufacturer
 -   model
 -   type (audio, video, mix, lighting, networking, patch panel)
+- 	location
 
 patchbay type has internal connections between ports.
 
-## Connector
+Equipment does not represent a structure like a rack or panel
+
+## ConnectorType
 
 concept of "connector" which is a physical connection on a piece of equipment.
 examples are XLR, DVI, BNC, IEC, etc.
 
-may need to implement subconector / port for creating split cables
-
 connector can have
 -   gender (male, female, rpmale, rpfemale, hermaphroditic, unknown)
 -   direction (input, outlet, power input, power outlet, bidirectional)
--   type (see below)
+-	Number of pins
+- 	Manufacturer
+-	Model
+-	SignalType: to allow some differentiation and connection logic.
 
-## Connector type
+Connectors are linked to equipment via a table that establishes individual
+instances of connectors, and their relationships
 
-this is a unique representation of number of pins, type of connector and type of
-pins. May also hold subconnectors as well.
+## Location
+
+represents where equipment resides. Does not represent an address or building.
