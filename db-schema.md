@@ -2,11 +2,11 @@
 
 ## connector\_gender
 
-| Field       | Datatype     | Description          |
-| ----------- | ------------ | -------------------- |
-| id          | int          | primary key          |
-| name        | varchar(50)  |                      |
-| description | varchar(500) | optional description |
+| Field       | Datatype     | Description          | Nullable |
+| ----------- | ------------ | -------------------- | -------- |
+| id          | int          | primary key          | No       |
+| name        | varchar(50)  |                      | No       |
+| description | varchar(500) | optional description | Yes      |
 
 ### Option List
 - Male
