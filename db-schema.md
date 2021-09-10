@@ -1,6 +1,6 @@
 # Database Schema
 
-## gender
+## connector\_gender
 
 | Field       | Datatype     | Description          |
 | ----------- | ------------ | -------------------- |
@@ -33,7 +33,7 @@
 - Bidirectional
 - N/A
 
-## signalType
+## signal\_type
 
 | Field       | Datatype     | Description          | Nullable |
 | ----------- | ------------ | -------------------- | -------- |
@@ -79,7 +79,7 @@
 - Phoenix Contact
 - Switchcraft
 
-## mountingType
+## mounting\_type
 
 | Field       | Datatype     | Description          | Nullable |
 | ----------- | ------------ | -------------------- | -------- |
@@ -95,7 +95,7 @@
 - Panel mount - Flat
 - Unknown
 
-## equipmentType
+## equipment\_type
 
 | Field       | Datatype     | Description          | Nullable |
 | ----------- | ------------ | -------------------- | -------- |
@@ -137,7 +137,7 @@
 - Clear (CLR)
 - Cyan (CYN)
 
-## locationType
+## location\_type
 
 | Field       | Datatype     | Description          | Nullable |
 | ----------- | ------------ | -------------------- | -------- |
@@ -152,7 +152,7 @@
 - Backer board
 - Enclosure
 
-## connectorType
+## connector\_type
 
 Represents connector types
 
@@ -163,13 +163,13 @@ Represents connector types
 | description  | varchar(500) |                  | optional description                       | Yes      |
 | gender       | int          | gender.id        |                                            | No       |
 | direction    | int          | direction.id     |                                            | No       |
-| numberPins   | int          |                  | number of pins                             | Yes      |
+| number\_pins   | int          |                  | number of pins                             | Yes      |
 | manufacturer | int          | manufacturer.id  |                                            | Yes      |
 | model        | varchar(50)  |                  | model number                               | Yes      |
 | color        | int          | color.id         |                                            | Yes      |
 | pluggable    | bit          |                  | If the connector is pluggable or hardwired | No       |
 
-## connectorTypeMating
+## connector\_type\_mating
 
 which connectors mate with which other connectors
 
@@ -192,11 +192,11 @@ separately in visual representations
 | diameter     | decimal(8,3) |                  | stored in mm                                | Yes      |
 | manufacturer | int          | manufacturer.id  |                                             | Yes      |
 | model        | varchar(50)  |                  | model number                                | Yes      |
-| type         | int          | equipmentType.id |                                             | No       |
-| numFaces     | int          |                  | number of faces with connectors             | No       |
-| rackPercent  | bit          |                  | how much of a rack space is equipment width | Yes      |
+| type         | int          | equipment\_type.id |                                             | No       |
+| number\_faces     | int          |                  | number of faces with connectors             | No       |
+| rack\_percent  | bit          |                  | how much of a rack space is equipment width | Yes      |
 
-## equipmentInst
+## equipment\_inst
 
 Represents an instance of a piece of equipment. Also ties to location
 
@@ -208,16 +208,16 @@ MountingType linked here since a piece of equipment can have multiple potential 
 | name          | varchar(50)  |                  | friendly name                                             | No       |
 | identifier    | varchar(50)  |                  | structured name                                           | Yes      |
 | description   | varchar(500) |                  | optional description                                      | Yes      |
-| mountingType  | int          | mountingType.id  |                                                           | No       |
+| mounting\_type  | int          | mounting\_type.id  |                                                           | No       |
 | location      | int          | location.id      |                                                           | Yes      |
 | rackUnit      | int          |                  | which rack unit in the location                           | Yes      |
-| dinRailNumber | int          |                  | which DIN rail in panel the equipment is on               | Yes      |
-| equipmentType | int          | equipment.id     |                                                           | No       |
-| xPos          | decimal(8,3) |                  | stored in mm, distance from left side of location edge    | No       |
-| yPos          | decimal(8,3) |                  | stored in mm, distance from bottom side of location edge  | No       |
-| zPos          | decimal(8,3) |                  | stored in mm, distance from face of location (default 0)  | Yes      |
+| din\_rail\_number | int          |                  | which DIN rail in panel the equipment is on               | Yes      |
+| equipment\_type | int          | equipment.id     |                                                           | No       |
+| x\_pos          | decimal(8,3) |                  | stored in mm, distance from left side of location edge    | No       |
+| y\_pos          | decimal(8,3) |                  | stored in mm, distance from bottom side of location edge  | No       |
+| z\_pos          | decimal(8,3) |                  | stored in mm, distance from face of location (default 0)  | Yes      |
 
-## equipmentConnector
+## equipment\_connector
 
 Represents individual instance of connector on equipment.
 
@@ -227,13 +227,13 @@ Represents individual instance of connector on equipment.
 | name          | varchar(50)  |                  | friendly name                                             | No       |
 | identifier    | varchar(50)  |                  | structured name                                           | Yes      |
 | description   | varchar(500) |                  | optional description                                      | Yes      |
-| xPos          | decimal(8,3) |                  | stored in mm, distance from left side of equipment edge   | No       |
-| yPos          | decimal(8,3) |                  | stored in mm, distance from bottom side of equipment edge | No       |
-| zPos          | decimal(8,3) |                  | stored in mm, distance from face of equipment (default 0) | Yes      |
+| x\_pos          | decimal(8,3) |                  | stored in mm, distance from left side of equipment edge   | No       |
+| y\_pos          | decimal(8,3) |                  | stored in mm, distance from bottom side of equipment edge | No       |
+| z\_pos          | decimal(8,3) |                  | stored in mm, distance from face of equipment (default 0) | Yes      |
 | face          | int          |                  | which face of the equipment the connector is attached to  | No       |
-| connectorType | int          | connectorType.id |                                                           | No       |
-| equipment     | int          | equipmentInst.id |                                                           | No       |
-| signalType    | int          | signalType.id    |                                                           | No       |
+| connector\_type | int          | connector\_type.id |                                                           | No       |
+| equipment     | int          | equipment\_tnst.id |                                                           | No       |
+| signal\_type    | int          | signal\_type.id    |                                                           | No       |
 
 
 ## location
@@ -248,16 +248,16 @@ Each physical rack cabinet or panel would be a separate location
 | name             | varchar(50)   |                  | friendly name                                               | No       |
 | identifier       | varchar(50)   |                  | structured name                                             | Yes      |
 | description      | varchar(500)  |                  | optional description                                        | Yes      |
-| locationType     | int           | locationType.id  |                                                             | Yes      |
-| numDINRails      | int           |                  |                                                             | Yes      |
-| dinRailPosns     | varchar(1000) |                  | contains encoded xyz, length coordinates of each DIN rail   | Yes      |
+| location\_type     | int           | location\_type.id  |                                                             | Yes      |
+| number\_din\_rails      | int           |                  |                                                             | Yes      |
+| din\_rail\_posns     | varchar(1000) |                  | contains encoded xyz, length coordinates of each DIN rail   | Yes      |
 | width            | decimal(8,3)  |                  | stored in mm, external dimension                            | Yes      |
 | height           | decimal(8,3)  |                  | stored in mm, external dimension                            | Yes      |
 | depth            | decimal(8,3)  |                  | stored in mm, external dimension                            | Yes      |
-| availWidth       | decimal(8,3)  |                  | stored in mm, internal dimension                            | Yes      |
-| availHeight      | decimal(8,3)  |                  | stored in mm, internal dimension, used for rack unit height | Yes      |
-| availDepth       | decimal(8,3)  |                  | stored in mm, internal dimension                            | Yes      |
-| physicalLocation | varchar(100)  |                  | street address, coordinates, description                    | Yes      |
+| avail\_width       | decimal(8,3)  |                  | stored in mm, internal dimension                            | Yes      |
+| avail\_height      | decimal(8,3)  |                  | stored in mm, internal dimension, used for rack unit height | Yes      |
+| avail\_depth       | decimal(8,3)  |                  | stored in mm, internal dimension                            | Yes      |
+| physical\_location | varchar(100)  |                  | street address, coordinates, description                    | Yes      |
 
 ## connection
 
@@ -271,12 +271,12 @@ An example of this is a wire or cable. Siamese cables are considered one connect
 | name          | varchar(50)   |                    | friendly name                                                | No       |
 | identifier    | varchar(50)   |                    | structured name                                              | Yes      |
 | description   | varchar(500)  |                    | optional description                                         | Yes      |
-| route         | int           | connectionRoute.id |                                                              | Yes      |
+| route         | int           | connection\_route.id |                                                              | Yes      |
 | length        | decimal(8,3)  |                    | stored in mm, nominal length of premade cable                | Yes      |
-| physicalMedia | int           | physicalMedia.id   |                                                              | Yes      |
-| numberOfEnds  | int           |                    | number of cable or wire ends that the connection consists of | Yes      |
+| physical\_media | int           | physical\_media.id   |                                                              | Yes      |
+| number\_of\_ends  | int           |                    | number of cable or wire ends that the connection consists of | Yes      |
 
-## connectionRoute
+## connection\_route
 
 represents a bundle of connections that are all routed along the same path
 
@@ -287,7 +287,7 @@ represents a bundle of connections that are all routed along the same path
 | identifier    | varchar(50)   |                  | structured name                                             | Yes      |
 | description   | varchar(500)  |                  | optional description                                        | Yes      |
 
-## connectionConnector
+## connection\_connector
 
 represents the ends of a connection and the associated connectors
 
@@ -298,11 +298,11 @@ represents the ends of a connection and the associated connectors
 | identifier    | varchar(50)   |                  | structured name                                               | Yes      |
 | description   | varchar(500)  |                  | optional description                                          | Yes      |
 | connection    | int           | connection.id    |                                                               | No       |
-| connectionEnd | int           |                  | which end of the connection this connector is associated with | No       |
-| connectorType | int           | connectorType.id |                                                               | No       |
+| connection\_end | int           |                  | which end of the connection this connector is associated with | No       |
+| connector\_type | int           | connector\_rype.id |                                                               | No       |
 
 
-## equipmentConnectionLinks
+## equipment\_connection\_links
 
 represents relationship between equipmentConnectors and connectionConnectors
 
@@ -312,7 +312,7 @@ represents relationship between equipmentConnectors and connectionConnectors
 | name                | varchar(50)   |                        | friendly name                  | No       |
 | identifier          | varchar(50)   |                        | structured name                | Yes      |
 | description         | varchar(500)  |                        | optional description           | Yes      |
-| equipmentConnector  | int           | equipmentConnector.id  |                                | No       |
-| connectionConnector | int           | connectionConnector.id |                                | No       |
+| equipment\_connector  | int           | equipment\_connector.id  |                                | No       |
+| connection\_connector | int           | connection\_connector.id |                                | No       |
 
 
