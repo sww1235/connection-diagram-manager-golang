@@ -2,15 +2,16 @@ package main
 
 import (
 	"flag"
+	"gorm.io/gorm"
 	"io/ioutil"
 	"log"
 	"os"
-	//"path"
+	"path"
 )
 
-var dBSqlLite bool
-var dBPostGres bool
-var dBPostGresDSN string
+var dbSQLite bool
+var dbPostGres bool
+var dbPostGresDSN string
 var openFile string
 
 var debugLogger = log.New(ioutil.Discard, "DEBUG: ", 0)
@@ -18,11 +19,47 @@ var infoLogger = log.New(os.Stderr, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile
 var fatalLogger = log.New(os.Stderr, "FATAL: ", log.Ldate|log.Ltime|log.Lshortfile)
 
 func main() {
-	err := initialization()
+	var dbSL *gorm.DB
+	var dbPG *gorm.DB
+	var dbLocalSL *gorm.DB
+	var err error
+	err = initialization()
 	if err != nil {
 		fatalLogger.Panicln("Config and flag init failed", err)
 	}
 	// connect to databases
+	if dbSQLite {
+
+		if dbSL, err = connect("SQLite", ""); err != nil {
+			fatalLogger.Panicln("Failed to initialize SQLite database", err)
+		} else {
+			// cannot close database connections created with GORM
+			// in the normal way
+			//	defer dbSL.Close()
+		}
+	}
+	if dbPostGres {
+
+		if dbPG, err = connect("PGSQL", dbPostGresDSN); err != nil {
+			fatalLogger.Panicln("Failed to initialize PostGreSQL database", err)
+		} else {
+			// cannot close database connections created with GORM
+			// in the normal way
+			//	defer dbPG.Close()
+
+		}
+	}
+	if openFile != "" {
+
+		if dbLocalSL, err = connect("SQLite", path.Base(openFile)); err != nil {
+			fatalLogger.Panicf("failed to open local project %s. Error: %s", openFile, err)
+		} else {
+			// cannot close database connections created with GORM
+			// in the normal way
+			//	defer dbLocalSL.Close()
+
+		}
+	}
 }
 
 //set up command line options, logging and configuration
@@ -41,7 +78,12 @@ func initialization() error {
 	//Define and parse commandline flags here
 	//Defaults are set in flags as appropriate
 	//flagConfigPath := flag.String("c", defaultConfigPath, "Path to config file")
-	flagOpenFile := flag.String("o", "", "open project file")
+
+	//project file is a folder containing a sqlLite db
+	//and graphviz files, as well as documentation and
+	//local config files
+	// SQLite file:= {projectfile}/{projectfile}.sqlite
+	flagOpenFile := flag.String("o", "", "open project `directory`")
 	flagDBSqlLite := flag.Bool("s", false, "Use project specific SqlLite database")
 	flagDBPostGres := flag.Bool("p", false, "Use PostgreSQL database")
 	flagDBPostGresDSN := flag.String("pgDSN", "", "Data Source Name (DSN) for PostGres database connection")
@@ -65,14 +107,14 @@ func initialization() error {
 	}
 
 	//retrieve values from flags and set global variables
-	dBSqlLite = *flagDBSqlLite
-	dBPostGres = *flagDBPostGres
-	dBPostGresDSN = *flagDBPostGresDSN
+	dbSQLite = *flagDBSqlLite
+	dbPostGres = *flagDBPostGres
+	dbPostGresDSN = *flagDBPostGresDSN
 	openFile = *flagOpenFile
 
-	if dBSqlLite && dBPostGres {
-		fatalLogger.Panicln("Multiple databases selected. This is not supported. Fix invocation")
-	}
+	//if dBSqlLite && dBPostGres {
+	//	fatalLogger.Panicln("Multiple databases selected. This is not supported. Fix invocation")
+	//}
 
 	//if *flagConfigPath != defaultConfigPath {
 	//	infoLogger.Println("Using config file path from flag", *flagConfigPath)
