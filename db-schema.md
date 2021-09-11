@@ -16,7 +16,15 @@
 - Hermaphroditic
 - Unknown
 
-## direction
+### physical\_media
+
+| Field       | Datatype     | Description          | Nullable |
+| ----------- | ------------ | -------------------- | -------- |
+| id          | int          | primary key          | No       |
+| name        | varchar(50)  |                      | No       |
+| description | varchar(500) | optional description | Yes      |
+
+# direction
 
 | Field       | Datatype     | Description          | Nullable |
 | ----------- | ------------ | -------------------- | -------- |
@@ -152,9 +160,9 @@
 - Backer board
 - Enclosure
 
-## connector\_type
+## connector\_model
 
-Represents connector types
+Represents connector models
 
 | Field        | Datatype     | Foreign Key Link | Description                                | Nullable |
 | ------------ | ------------ | ---------------- | ------------------------------------------ | -------- |
@@ -163,18 +171,18 @@ Represents connector types
 | description  | varchar(500) |                  | optional description                       | Yes      |
 | gender       | int          | gender.id        |                                            | No       |
 | direction    | int          | direction.id     |                                            | No       |
-| number\_pins   | int          |                  | number of pins                             | Yes      |
+| number\_of\_pins   | int          |                  | number of pins                             | Yes      |
 | manufacturer | int          | manufacturer.id  |                                            | Yes      |
 | model        | varchar(50)  |                  | model number                               | Yes      |
 | color        | int          | color.id         |                                            | Yes      |
 | pluggable    | bit          |                  | If the connector is pluggable or hardwired | No       |
 
-## connector\_type\_mating
+## connector\_model\_mating
 
 which connectors mate with which other connectors
 
 <https://dba.stackexchange.com/a/48663/185504>
-## equipment
+## equipmentModel
 
 Represents a piece of equipment.
 
@@ -194,7 +202,7 @@ separately in visual representations
 | model        | varchar(50)  |                  | model number                                | Yes      |
 | type         | int          | equipment\_type.id |                                             | No       |
 | number\_faces     | int          |                  | number of faces with connectors             | No       |
-| rack\_percent  | bit          |                  | how much of a rack space is equipment width | Yes      |
+| rack\_percent  | int          |                  | how much of a rack space is equipment width | Yes      |
 
 ## equipment\_inst
 
@@ -229,7 +237,7 @@ Represents individual instance of connector on equipment.
 | description   | varchar(500) |                  | optional description                                      | Yes      |
 | x\_pos          | decimal(8,3) |                  | stored in mm, distance from left side of equipment edge   | No       |
 | y\_pos          | decimal(8,3) |                  | stored in mm, distance from bottom side of equipment edge | No       |
-| z\_pos          | decimal(8,3) |                  | stored in mm, distance from face of equipment (default 0) | Yes      |
+| z\_pos          | decimal(8,3) |                  | stored in mm, distance from face of equipment (default 0) | No      |
 | face          | int          |                  | which face of the equipment the connector is attached to  | No       |
 | connector\_type | int          | connector\_type.id |                                                           | No       |
 | equipment     | int          | equipment\_tnst.id |                                                           | No       |
@@ -299,7 +307,7 @@ represents the ends of a connection and the associated connectors
 | description   | varchar(500)  |                  | optional description                                          | Yes      |
 | connection    | int           | connection.id    |                                                               | No       |
 | connection\_end | int           |                  | which end of the connection this connector is associated with | No       |
-| connector\_type | int           | connector\_rype.id |                                                               | No       |
+| connector\_model | int           | connector\_model.id |                                                               | No       |
 
 
 ## equipment\_connection\_links
