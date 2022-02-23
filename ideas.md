@@ -11,6 +11,8 @@ in connection object.
 
 may want concept of route that connections can be bundled into
 
+Want to have wire, cable, route
+
 ## Connection
 concept of "connection" is an interconnection between two or more connectors.
 
