@@ -66,6 +66,10 @@ connector_type: # dictionary of all available connector types
 		supplier: <str> 			# supplier
 		spn: <str>					# supplier part number
 		gender: <str> 				# (male, female, rpmale, rpfemale, hermaphroditic, unknown)
+		height: <float>				# height of connector in mm
+		width: <float>				# width of connector in mm
+		depth: <float>				# depth of connector in mm
+		diameter: <float>			# diameter of circular connector in mm
 
 		# pinout information
 		# at least one of the following must be specified
@@ -85,6 +89,7 @@ connector_type: # dictionary of all available connector types
 
 connector_type_mate: 	# dictionary of which connectors mate with which other connectors
 						# https://dba.stackexchange.com/a/48663/185504
+						# TODO:
 
 equipment_type: # dictionary of all available equipment types
 	<str>: # equipmentType designator (must be unique)
@@ -94,6 +99,10 @@ equipment_type: # dictionary of all available equipment types
 
 		manufacturer: <str>
 		model: <str>
+		pn: <str>					# [internal] part number
+		mpn: <str>					# manufacturer part number
+		supplier: <str> 			# supplier
+		spn: <str>					# supplier part number
 		mounting_type: <list> 		# (19" rack, 23" rack, 1/2 19" rack, DIN rail,
 									# surface wall mount, inset wall mount, panel, custom)
 		type: <str> 				# (audio, video, mix, lighting, networking, patch panel)
@@ -120,6 +129,10 @@ pathway_type: 	# dictonary of all available cable pathway types.
 				# Some of these definitions may be fluid and can be configured as the user desires.
 	<str>: 		# pathway type designator (must be unique)
 		type: <str> 				# type of cable pathway (conduit, cable tray, etc)
+		pn: <str>					# [internal] part number
+		mpn: <str>					# manufacturer part number
+		supplier: <str> 			# supplier
+		spn: <str>					# supplier part number
 		size: <str>					# specified and parsed differently depending on type
 									# TODO: need to define specific size defintions
 									# files use metric units
@@ -137,6 +150,10 @@ wire_type: 	# dictonary of all available wire types.
 	<str>: 	# wire type designator (must be unique)
 		material: <str>				# copper, alumninum, ACSR, steel, glass, plastic
 		manufacturer: <str>
+		pn: <str>					# [internal] part number
+		mpn: <str>					# manufacturer part number
+		supplier: <str> 			# supplier
+		spn: <str>					# supplier part number
 		insulation_material: <str>	# PVC, Nylon, thermoplastic, etc
 		wire_type_code: <str>		# THWN, XHHN, etc
 		cross_sect_area: <float>	# specified in mm^2.
@@ -161,6 +178,10 @@ cable_type: # dictonary of all available raw cable types.
 				type: <str>			# identifier of wire or cable type of the core
 				color: <str>		# color of individual core insulation
 		manufacturer: <str>
+		pn: <str>					# [internal] part number
+		mpn: <str>					# manufacturer part number
+		supplier: <str> 			# supplier
+		spn: <str>					# supplier part number
 		cable_type_code: <str>		# SOOW, FC, FCC, TC, MC, AC, MC, UF, PLTC, MV, etc
 		cross_sect_area: <float>	# specified in mm^2. Outer area of cable
 		cross_section: <str>		# oval, circular, siamese
@@ -168,7 +189,7 @@ cable_type: # dictonary of all available raw cable types.
 		width: <float>				# width of cable if oval or siamese
 		diameter: <float>			# diameter of cable if circular
 
-		layer: # dictonary of shields and insulation layers on outside of cable
+		layer: # dictionary of shields and insulation layers on outside of cable
 			layer: <int> 			# counted from inside to outside of cable
 			type: <str>				# insulation, semiconductor, shield, screen, concentric neutral
 			material: <str>
@@ -176,13 +197,48 @@ cable_type: # dictonary of all available raw cable types.
 			temp_rating: <float>	# temp rating for insulation layer. Specified in degrees centigrade
 			color: <str>			# color of insulation or semiconductor
 
-term_cable_types:	# dictonary of available manufactuered cables,
-					# consisting of a raw cable or wire type and optional connector specifications.
+term_cable_type:	# dictionary of available manufactuered cables,
+					# consisting of a raw cable or wire type and connector specifications.
+					# term cables can only have two ends, but each end can have
+					# a fan out or split with multiple connectors
 					# connectors defined on a term_cable are accessed based on dot notation
 					# wire, cable and term_cable designators must all be unique
+	<str>: 			# unique ID of term cable type
+		manufacturer: <str>			# Manufacturer of term_cable
+		pn: <str>					# [internal] part number
+		mpn: <str>					# manufacturer part number
+		supplier: <str> 			# supplier
+		spn: <str>					# supplier part number
+		cable:						# ID of cable or wire type
+		nom_length: <float>			# nominal length in meters
+		length: <float>				# actual length in meters
+		end1:	 					# dictionary of connectors attached to term cable
+			type: <str>				# ID of connector type
+			autoTerm: <str>			# auto termination method, current available values are:
+									# `pin_core` which matches numbered or unique named pins and cores with each other
+									# others to be thought of at a later date.
+			termination:			# dictionary of core to connector pin mappings for each connector
+									# either auto termination method or manual termination method
+									# must be specified
+		end2:	 					# dictionary of connectors attached to term cable
+			type: <str>				# ID of connector type
+			autoTerm: <str>			# auto termination method, current available values are:
+									# `pin_core` which matches numbered or unique named pins and cores with each other
+									# others to be thought of at a later date.
+			termination:			# dictionary of core to connector pin mappings for each connector
+									# either auto termination method or manual termination method
+									# must be specified
 
 
-location_type: # dictonary of available location types
+
+location_type: 	# dictionary of available location types
+	<str>: 		# unique ID of location type
+		manufacturer: <str>			# Manufacturer of term_cable
+		pn: <str>					# [internal] part number
+		mpn: <str>					# manufacturer part number
+		supplier: <str> 			# supplier
+		spn: <str>					# supplier part number
+
 
 
 # initial value list.
@@ -228,7 +284,8 @@ wire_cable: 	# dictonary of all wires, cables and term_cables defined in project
 		identifier: <str>			# structured name
 		description: <str>			# optional description
 		pathway: <str>				# ID of pathway instance
-		length: <float>				# length in meters, nominal length of term_cable
+		length: <float>				# length in meters, automatically sourced from
+									# term cable attribute and ignored if specifed again here
 		end1:	 					# dictionary of connectors attached to cable or wire
 									# technically optional but being excluded will cause
 									# connections specified to be flagged as errors
@@ -239,6 +296,17 @@ wire_cable: 	# dictonary of all wires, cables and term_cables defined in project
 			termination:			# dictionary of core to connector pin mappings for each connector
 									# either auto termination method or manual termination method
 									# must be specified
+		end2:	 					# dictionary of connectors attached to cable or wire
+									# technically optional but being excluded will cause
+									# connections specified to be flagged as errors
+			type: <str>				# ID of connector type
+			autoTerm: <str>			# auto termination method, current available values are:
+									# `pin_core` which matches numbered or unique named pins and cores with each other
+									# others to be thought of at a later date.
+			termination:			# dictionary of core to connector pin mappings for each connector
+									# either auto termination method or manual termination method
+									# must be specified
+
 
 pathway: 		# dictonary of pathways defined in project
 	<str>:		# unique ID of pathway
@@ -282,12 +350,6 @@ connection:		# list of all connections defined in project, with submappings to i
 									# connected together, but their parents are, application logic will assume
 									# connection patterns for the subobjects.
 	  end2: <str>					# unique identifier of connected object. Cannot be the same as end1.
-
-connectors: 	# dictionary of all connectors defined in project. These are used for custom cables, or things like WAGOs etc.
-
-
-
-
 
 ```
 
