@@ -94,7 +94,7 @@ equipment_type: # dictionary of all available equipment types
 
 		manufacturer: <str>
 		model: <str>
-		mounting_type: <str> 		# (19" rack, 23" rack, 1/2 19" rack, DIN rail,
+		mounting_type: <list> 		# (19" rack, 23" rack, 1/2 19" rack, DIN rail,
 									# surface wall mount, inset wall mount, panel, custom)
 		type: <str> 				# (audio, video, mix, lighting, networking, patch panel)
 		faces: 	# dictionary of faces that can have connectors associated with them,
@@ -132,6 +132,8 @@ wire_type: 	# dictonary of all available wire types.
 			# A wire is defined as a material (not necessarily conductive) with optional insulation.
 			# if a product has a shield or additional layers, it must be defined as a cable
 			# insulation color is defined on individual wire instance
+			# wire, cable and term_cable designators must all be unique
+			#
 	<str>: 	# wire type designator (must be unique)
 		material: <str>				# copper, alumninum, ACSR, steel, glass, plastic
 		manufacturer: <str>
@@ -148,12 +150,15 @@ cable_type: # dictonary of all available raw cable types.
 			# A cable is defined as one or more wires mechanically attached together,
 			# with optional insulation and semiconducting layers, and optional shields
 			# if a product has a shield or additional layers, it must be defined as a cable
-			# insulation color is defined on individual wire instance
+			# wire insulation color is defined on individual wire instance
+			# individual wire instances within cable are accessed with dot notation
+			# wire, cable and term_cable designators must all be unique
+			#
 	<str>: 	# cable type designator (must be unique)
-		core: 	# dictionary of wire cores inside cable.
+		core: 	# dictionary of wire or cable cores inside cable.
 				# strength members are treated as a wire
-			<str>: # wire type identifier
-				id: <str>			# identifier of individual core. Must be unique per cable type
+			<str>: # identifier of individual core. Must be unique per cable type
+				type: <str>			# identifier of wire or cable type of the core
 				color: <str>		# color of individual core insulation
 		manufacturer: <str>
 		cable_type_code: <str>		# SOOW, FC, FCC, TC, MC, AC, MC, UF, PLTC, MV, etc
@@ -174,6 +179,7 @@ cable_type: # dictonary of all available raw cable types.
 term_cable_types:	# dictonary of available manufactuered cables,
 					# consisting of a raw cable or wire type and optional connector specifications.
 					# connectors defined on a term_cable are accessed based on dot notation
+					# wire, cable and term_cable designators must all be unique
 
 
 location_type: # dictonary of available location types
@@ -203,18 +209,71 @@ colors: # dictionary of colors. The color name (key) must be unique.
 ## Project Definitions
 
 ```yaml
-equipment: dictionary of equipment defined in project
+equipment: 		# dictionary of equipment defined in project
+	<str>: 		# unique ID of equipment instance
+		type: <str> 				# ID of equipment type
+		identifier: <str>			# structured name
+		mounting_type: <str>		# must be in list of mounting types defined on equipment type
+		location: <str>				# ID of location instance
+		description: <str>			# optional description
 
 
-wire_cable: dictonary of all wires and cables defined in project
+wire_cable: 	# dictonary of all wires, cables and term_cables defined in project
+				# If an instance is a wire or cable is defined by the type
+				#
+	<str>: 		# unique ID of wire or cable instance.
+				# Wires within cables are assigned IDs automatically and are not listed here
+		type: <str>					# ID of wire/cable/term_cable type
+		identifier: <str>			# structured name
+		description: <str>			# optional description
+		pathway: <str>				# ID of pathway instance
+		length: <float>				# length in meters, nominal length of term_cable
 
-pathway: dictonary of pathways defined in project
+pathway: 		# dictonary of pathways defined in project
+	<str>:		# unique ID of pathway
+		type: <str>					# ID of pathway type
+		identifier: <str>			# structured name
+		description: <str>			# optional description
+		length: <float>				# length in meters
 
-location: dictionary of locations defined in project
+location: 		# dictionary of locations defined in project
+				# locations may have sublocations defined in them.
+				# examples of sublocations would be coordinate pairs on a backplane,
+				# individual DIN rails on a backplane, and then the distance along the DIN rail
+				# individual keystone slots on a panel
+				# rack units / sub rack units within a rack
+				#
+				# Need to check sublocations for recursion
+				#
+	<str>:		# unique ID of location instance
+		type: <str>					# ID of location type
+		identifier: <str>			# structured name
+		description: <str>			# optional description
+		width: <float>				# overall width of location, specified in mm
+		height: <float>				# overall height of location, specified in mm
+		depth: <float>				# overall depth of location, specified in mm
+		usableWidth: <float>		# usable internal width of location, specified in mm
+		usableDepth: <float>		# usable internal depth of location, specified in mm
+		usableHeight: <float>		# usable internal height of location, specified in mm.
+		phyiscalLocation: <str>		# street address, coordinates, description
+		sublocations:				# dictionary  of sublocations
+			id:	<str>				# unique id of location, no recursion
+			x: <float>				# distance from left side of parent location, specified in mm
+			y: <float>				# distance from bottom of parent location, specified in mm
+			z: <float>				# distance from back of parent location, specified in mm
 
-connections: dictionary of all connections defined in project
 
-connectors: dictionary of all connectors defined in project. These are used for custom cables, or things like WAGOs etc.
+connection:		# list of all connections defined in project, with submappings to identify the objects that are connected
+				# connections are uniquely identified by concatenating the two ids of the connected objects together
+				#
+	- end1: <str> 					# unique identifier of connected object.
+									# If connected object contains subobjects, and they are not specifically
+									# connected together, but their parents are, application logic will assume
+									# connection patterns for the subobjects.
+	  end2: <str>					# unique identifier of connected object. Cannot be the same as end1.
+
+connectors: 	# dictionary of all connectors defined in project. These are used for custom cables, or things like WAGOs etc.
+
 
 
 
