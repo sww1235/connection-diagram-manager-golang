@@ -28,7 +28,12 @@ func main() {
 	// build master datasets from all unmarshalled files
 	// launch optional TUI, GUI or command line
 	// if command line is selected, perform selected commands
-	var dbSL *gorm.DB
+	// Ideas for operations:
+        // Print complete connection diagram using graphviz/custom visualizer
+        // Calculate conduit / cable tray fill
+        // Print out layout diagram of individual or all locations
+
+        var dbSL *gorm.DB
 	var dbPG *gorm.DB
 	var dbLocalSL *gorm.DB
 	var err error
