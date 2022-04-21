@@ -219,7 +219,8 @@ equipment: 		# dictionary of equipment defined in project
 
 
 wire_cable: 	# dictonary of all wires, cables and term_cables defined in project
-				# If an instance is a wire or cable is defined by the type
+				# wires and cables can only have two ends, but each end can have
+				# a fan out or split with multiple connectors
 				#
 	<str>: 		# unique ID of wire or cable instance.
 				# Wires within cables are assigned IDs automatically and are not listed here
@@ -228,6 +229,16 @@ wire_cable: 	# dictonary of all wires, cables and term_cables defined in project
 		description: <str>			# optional description
 		pathway: <str>				# ID of pathway instance
 		length: <float>				# length in meters, nominal length of term_cable
+		end1:	 					# dictionary of connectors attached to cable or wire
+									# technically optional but being excluded will cause
+									# connections specified to be flagged as errors
+			type: <str>				# ID of connector type
+			autoTerm: <str>			# auto termination method, current available values are:
+									# `pin_core` which matches numbered or unique named pins and cores with each other
+									# others to be thought of at a later date.
+			termination:			# dictionary of core to connector pin mappings for each connector
+									# either auto termination method or manual termination method
+									# must be specified
 
 pathway: 		# dictonary of pathways defined in project
 	<str>:		# unique ID of pathway
