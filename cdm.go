@@ -20,6 +20,14 @@ var infoLogger = log.New(os.Stderr, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile
 var fatalLogger = log.New(os.Stderr, "FATAL: ", log.Ldate|log.Ltime|log.Lshortfile)
 
 func main() {
+	// Init logging and command line stuff
+	// optionally set up database connections
+	// parse project config file
+	// unmarshal any referenced library files
+	// unmarshal any project yaml files
+	// build master datasets from all unmarshalled files
+	// launch optional TUI, GUI or command line
+	// if command line is selected, perform selected commands
 	var dbSL *gorm.DB
 	var dbPG *gorm.DB
 	var dbLocalSL *gorm.DB
