@@ -2,11 +2,12 @@ package main
 
 import (
 	"flag"
-	"gorm.io/gorm"
 	"io/ioutil"
 	"log"
 	"os"
 	"path"
+
+	"gorm.io/gorm"
 )
 
 var dbSQLite bool
