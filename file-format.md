@@ -6,7 +6,7 @@ All file formats are currently based on YAML, (and inspired by
 Connection Diagram Manager uses a directory structure to represent an
 individual project. All YAML files in the `src` subdirectory will be parsed for
 any of the following information. It can be all in one file, or split up into
-multiple files. There can be multiple instances of each top level directory
+multiple files. There can be multiple instances of each top level dictionary
 which are parsed and combined as much as possible. If there are unique values
 that conflict, the user will be notified with the file names and line numbers
 that caused the conflict.
@@ -55,16 +55,16 @@ connector_type: # dictionary of all available connector types
 		# most tags are optional and will be filled with
 		# blank values if unpopulated
 
-		manufacturer: <str> 		# manufacturer name
-		model: <str> 				# connector model description
-		description: <str> 			# free text field for larger descriptions of connectors
+		manufacturer: <str>			# manufacturer name
+		model: <str>				# connector model description
+		description: <str>			# free text field for larger descriptions of connectors
 		mounting_type: <str>		# cable, pcb through hole, pcbsurface mount, panel
-		panel_cutout: <str> 		# D, A, etc. optional
+		panel_cutout: <str>			# D, A, etc. optional
 		pn: <str>					# [internal] part number
 		mpn: <str>					# manufacturer part number
-		supplier: <str> 			# supplier
+		supplier: <str>				# supplier
 		spn: <str>					# supplier part number
-		gender: <str> 				# (male, female, rpmale, rpfemale, hermaphroditic, unknown)
+		gender: <str>				# (male, female, rpmale, rpfemale, hermaphroditic, unknown)
 		height: <float>				# height of connector in mm
 		width: <float>				# width of connector in mm
 		depth: <float>				# depth of connector in mm
@@ -79,14 +79,14 @@ connector_type: # dictionary of all available connector types
 		pincolors: <list>			# list of colors to be assigned
 									# goes in order of pin count/pin list
 									# if fewer colors are specified than pins, end of list will have no colors specified
-		pin_signal_type: <list> 	# same specs as pincolors
+		pin_signal_type: <list>		# same specs as pincolors
 
 		# all images are specified as SVG images so they scale.
-		visrep: <svg> 				# svg text (ideally minimized), can be multiline
-		pin_visrep: <svg> 			# svg text, shows pin layout of connector
+		visrep: <svg>				# svg text (ideally minimized), can be multiline
+		pin_visrep: <svg>			# svg text, shows pin layout of connector
 
 
-connector_type_mate: 	# dictionary of which connectors mate with which other connectors
+connector_type_mate:	# dictionary of which connectors mate with which other connectors
 						# https://dba.stackexchange.com/a/48663/185504
 						# TODO:
 
@@ -100,37 +100,37 @@ equipment_type: # dictionary of all available equipment types
 		model: <str>
 		pn: <str>					# [internal] part number
 		mpn: <str>					# manufacturer part number
-		supplier: <str> 			# supplier
+		supplier: <str>				# supplier
 		spn: <str>					# supplier part number
-		mounting_type: <list> 		# (19" rack, 23" rack, 1/2 19" rack, DIN rail,
+		mounting_type: <list>		# (19" rack, 23" rack, 1/2 19" rack, DIN rail,
 									# surface wall mount, inset wall mount, panel, custom)
-		type: <str> 				# (audio, video, mix, lighting, networking, patch panel)
-		faces: 	# dictionary of faces that can have connectors associated with them,
+		type: <str>					# (audio, video, mix, lighting, networking, patch panel)
+		faces:	# dictionary of faces that can have connectors associated with them,
 				# and an associated visual representation. should not include connectors themselves.
 			<str>: <svg>
 			<str>: <svg>
-		visrep: <svg> 				# overall visual representation of equipment
+		visrep: <svg>				# overall visual representation of equipment
 
 		connectors: # dictionary of connectors on equipment. Accessed via dot notation
 
 			<str>: # connectorType identifier
 
-				id: <str> 			# identifier of connector on equipment. must be unique per equipment type
-				direction: <str> 	# (input, output, power input, power output, bidirectional, passive)
-				face: <str> 		# face connector is located on
-				x: <integer> 		# location of connector from bottom left of visrep of face to right
-				y: <integer> 		# location of connector from bottom left of visrep of face up
+				id: <str>			# identifier of connector on equipment. must be unique per equipment type
+				direction: <str>	# (input, output, power input, power output, bidirectional, passive)
+				face: <str>			# face connector is located on
+				x: <integer>		# location of connector from bottom left of visrep of face to right
+				y: <integer>		# location of connector from bottom left of visrep of face up
 
 # will be populated with a default set of values unless otherwise specified.
-pathway_type: 	# dictonary of all available cable pathway types.
+pathway_type:	# dictonary of all available cable pathway types.
 				# This is used for things like conduit, and cable tray,
 				# but also includes things like J-hooks, or free-air cables.
 				# Some of these definitions may be fluid and can be configured as the user desires.
-	<str>: 		# pathway type designator (must be unique)
-		type: <str> 				# type of cable pathway (conduit, cable tray, etc)
+	<str>:		# pathway type designator (must be unique)
+		type: <str>					# type of cable pathway (conduit, cable tray, etc)
 		pn: <str>					# [internal] part number
 		mpn: <str>					# manufacturer part number
-		supplier: <str> 			# supplier
+		supplier: <str>				# supplier
 		spn: <str>					# supplier part number
 		size: <str>					# specified and parsed differently depending on type
 									# TODO: need to define specific size defintions
@@ -140,18 +140,18 @@ pathway_type: 	# dictonary of all available cable pathway types.
 		material: <str>				# primary material of pathway
 
 
-wire_type: 	# dictonary of all available wire types.
+wire_type:	# dictonary of all available wire types.
 			# A wire is defined as a material (not necessarily conductive) with optional insulation.
 			# if a product has a shield or additional layers, it must be defined as a cable
 			# insulation color is defined on individual wire instance
 			# wire, cable and term_cable designators must all be unique
 			#
-	<str>: 	# wire type designator (must be unique)
+	<str>:	# wire type designator (must be unique)
 		material: <str>				# copper, alumninum, ACSR, steel, glass, plastic
 		manufacturer: <str>
 		pn: <str>					# [internal] part number
 		mpn: <str>					# manufacturer part number
-		supplier: <str> 			# supplier
+		supplier: <str>				# supplier
 		spn: <str>					# supplier part number
 		insulation_material: <str>	# PVC, Nylon, thermoplastic, etc
 		wire_type_code: <str>		# THWN, XHHN, etc
@@ -170,8 +170,8 @@ cable_type: # dictonary of all available raw cable types.
 			# individual wire instances within cable are accessed with dot notation
 			# wire, cable and term_cable designators must all be unique
 			#
-	<str>: 	# cable type designator (must be unique)
-		core: 	# dictionary of wire or cable cores inside cable.
+	<str>:	# cable type designator (must be unique)
+		core:	# dictionary of wire or cable cores inside cable.
 				# strength members are treated as a wire
 			<str>: # identifier of individual core. Must be unique per cable type
 				type: <str>			# identifier of wire or cable type of the core
@@ -179,7 +179,7 @@ cable_type: # dictonary of all available raw cable types.
 		manufacturer: <str>
 		pn: <str>					# [internal] part number
 		mpn: <str>					# manufacturer part number
-		supplier: <str> 			# supplier
+		supplier: <str>				# supplier
 		spn: <str>					# supplier part number
 		cable_type_code: <str>		# SOOW, FC, FCC, TC, MC, AC, MC, UF, PLTC, MV, etc
 		cross_sect_area: <float>	# specified in mm^2. Outer area of cable
@@ -189,7 +189,7 @@ cable_type: # dictonary of all available raw cable types.
 		diameter: <float>			# diameter of cable if circular
 
 		layer: # dictionary of shields and insulation layers on outside of cable
-			layer: <int> 			# counted from inside to outside of cable
+			layer: <int>			# counted from inside to outside of cable
 			type: <str>				# insulation, semiconductor, shield, screen, concentric neutral
 			material: <str>
 			volt_rating: <float>	# voltage rating for insulation layer
@@ -202,16 +202,16 @@ term_cable_type:	# dictionary of available manufactuered cables,
 					# a fan out or split with multiple connectors
 					# connectors defined on a term_cable are accessed based on dot notation
 					# wire, cable and term_cable designators must all be unique
-	<str>: 			# unique ID of term cable type
+	<str>:			# unique ID of term cable type
 		manufacturer: <str>			# Manufacturer of term_cable
 		pn: <str>					# [internal] part number
 		mpn: <str>					# manufacturer part number
-		supplier: <str> 			# supplier
+		supplier: <str>				# supplier
 		spn: <str>					# supplier part number
 		cable:						# ID of cable or wire type
 		nom_length: <float>			# nominal length in meters
 		length: <float>				# actual length in meters
-		end1:	 					# dictionary of connectors attached to term cable
+		end1:						# dictionary of connectors attached to term cable
 			type: <str>				# ID of connector type
 			autoTerm: <str>			# auto termination method, current available values are:
 									# `pin_core` which matches numbered or unique named pins and cores with each other
@@ -219,7 +219,7 @@ term_cable_type:	# dictionary of available manufactuered cables,
 			termination:			# dictionary of core to connector pin mappings for each connector
 									# either auto termination method or manual termination method
 									# must be specified
-		end2:	 					# dictionary of connectors attached to term cable
+		end2:						# dictionary of connectors attached to term cable
 			type: <str>				# ID of connector type
 			autoTerm: <str>			# auto termination method, current available values are:
 									# `pin_core` which matches numbered or unique named pins and cores with each other
@@ -230,12 +230,12 @@ term_cable_type:	# dictionary of available manufactuered cables,
 
 
 
-location_type: 	# dictionary of available location types
-	<str>: 		# unique ID of location type
+location_type:	# dictionary of available location types
+	<str>:		# unique ID of location type
 		manufacturer: <str>			# Manufacturer of term_cable
 		pn: <str>					# [internal] part number
 		mpn: <str>					# manufacturer part number
-		supplier: <str> 			# supplier
+		supplier: <str>				# supplier
 		spn: <str>					# supplier part number
 
 
@@ -256,7 +256,7 @@ location_type: 	# dictionary of available location types
 
 
 colors: # dictionary of colors. The color name (key) must be unique.
-	<str>: <str> 					# name: abbreviation
+	<str>: <str>					# name: abbreviation
 
 
 ```
@@ -264,20 +264,20 @@ colors: # dictionary of colors. The color name (key) must be unique.
 ## Project Definitions
 
 ```yaml
-equipment: 		# dictionary of equipment defined in project
-	<str>: 		# unique ID of equipment instance
-		type: <str> 				# ID of equipment type
+equipment:		# dictionary of equipment defined in project
+	<str>:		# unique ID of equipment instance
+		type: <str>					# ID of equipment type
 		identifier: <str>			# structured name
 		mounting_type: <str>		# must be in list of mounting types defined on equipment type
 		location: <str>				# ID of location instance
 		description: <str>			# optional description
 
 
-wire_cable: 	# dictonary of all wires, cables and term_cables defined in project
+wire_cable:		# dictonary of all wires, cables and term_cables defined in project
 				# wires and cables can only have two ends, but each end can have
 				# a fan out or split with multiple connectors
 				#
-	<str>: 		# unique ID of wire or cable instance.
+	<str>:		# unique ID of wire or cable instance.
 				# Wires within cables are assigned IDs automatically and are not listed here
 		type: <str>					# ID of wire/cable/term_cable type
 		identifier: <str>			# structured name
@@ -285,7 +285,7 @@ wire_cable: 	# dictonary of all wires, cables and term_cables defined in project
 		pathway: <str>				# ID of pathway instance
 		length: <float>				# length in meters, automatically sourced from
 									# term cable attribute and ignored if specifed again here
-		end1:	 					# dictionary of connectors attached to cable or wire
+		end1:						# dictionary of connectors attached to cable or wire
 									# technically optional but being excluded will cause
 									# connections specified to be flagged as errors
 			type: <str>				# ID of connector type
@@ -295,7 +295,7 @@ wire_cable: 	# dictonary of all wires, cables and term_cables defined in project
 			termination:			# dictionary of core to connector pin mappings for each connector
 									# either auto termination method or manual termination method
 									# must be specified
-		end2:	 					# dictionary of connectors attached to cable or wire
+		end2:						# dictionary of connectors attached to cable or wire
 									# technically optional but being excluded will cause
 									# connections specified to be flagged as errors
 			type: <str>				# ID of connector type
@@ -307,14 +307,14 @@ wire_cable: 	# dictonary of all wires, cables and term_cables defined in project
 									# must be specified
 
 
-pathway: 		# dictonary of pathways defined in project
+pathway:		# dictonary of pathways defined in project
 	<str>:		# unique ID of pathway
 		type: <str>					# ID of pathway type
 		identifier: <str>			# structured name
 		description: <str>			# optional description
 		length: <float>				# length in meters
 
-location: 		# dictionary of locations defined in project
+location:		# dictionary of locations defined in project
 				# locations may have sublocations defined in them.
 				# examples of sublocations would be coordinate pairs on a backplane,
 				# individual DIN rails on a backplane, and then the distance along the DIN rail
@@ -344,7 +344,7 @@ location: 		# dictionary of locations defined in project
 connection:		# list of all connections defined in project, with submappings to identify the objects that are connected
 				# connections are uniquely identified by concatenating the two ids of the connected objects together
 				#
-	- end1: <str> 					# unique identifier of connected object.
+	- end1: <str>					# unique identifier of connected object.
 									# If connected object contains subobjects, and they are not specifically
 									# connected together, but their parents are, application logic will assume
 									# connection patterns for the subobjects.
