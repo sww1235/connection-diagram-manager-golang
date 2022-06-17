@@ -8,12 +8,16 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
+
+	"gopkg.in/yaml.v3"
 )
 
 var dbPostGres bool
 var dbPostGresDSN string
 
 var projectDirectory string
+var cfgFile []byte
 
 var debugLogger = log.New(ioutil.Discard, "DEBUG: ", 0)
 var infoLogger = log.New(os.Stderr, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
@@ -52,8 +56,34 @@ func main() {
 
 	//	}
 	//}
-
+	// https://zetcode.com/golang/yaml/
 	// Parse project config file
+	// config file can either be in root or src directory,
+	// and must be named "cdm_config.yaml"
+	// attempt to read from config file in src directory first,
+	// then root directory to prioritize the one in src.
+	cfgFile, err = ioutil.ReadFile(filepath.Join(projectDirectory, "src", "cdm_config.yaml"))
+	if err != nil {
+		// check to see if error is type patherror, and assume file wasn't found in src directory, so log
+		// and try root directory
+		if e, ok := err.(*os.PathError); ok {
+			debugLogger.Println("couldn't find project config file in src directory", e.Error())
+			cfgFile, err = ioutil.ReadFile(filepath.Join(projectDirectory, "cdm_config.yaml"))
+			if err != nil {
+				fatalLogger.Panicln("Could not find project config file in src or root directory", err)
+			}
+		} else {
+			fatalLogger.Panicln("something strange happened when reading config file, panic!", err)
+		}
+
+	}
+	cfgData := make(map[interface{}]interface{})
+
+	err = yaml.Unmarshal(cfgFile, &cfgData)
+	if err != nil {
+		fatalLogger.Panicln("something failed unmarshalling the config file", err)
+	}
+
 }
 
 //set up command line options, logging and configuration
