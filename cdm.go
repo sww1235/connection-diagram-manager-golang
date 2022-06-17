@@ -147,6 +147,7 @@ func readConfig() error {
 	if err != nil {
 		if errors.Is(err, fs.ErrNotExist) {
 			srcCfgExists = false
+			err = nil
 		}
 
 	} else {
@@ -157,6 +158,7 @@ func readConfig() error {
 	if err != nil {
 		if errors.Is(err, fs.ErrNotExist) {
 			rootCfgExists = false
+			err = nil
 		}
 
 	} else {
