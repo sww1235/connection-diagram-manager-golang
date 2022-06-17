@@ -106,35 +106,28 @@ func initialization() error {
 	dbPostGresDSN = *flagDBPostGresDSN
 	noDefaultLibraries = *flagNoDefaultLibs
 
-	if len(flag.Args()) > 1 {
+	if flag.NArg() > 1 {
 		infoLogger.Println("Multiple project directories specified, only using first")
 	}
 
+	debugLogger.Println(flag.Arg(0))
 	projectDirectory = flag.Arg(0) // first remaining cmd line arg after flag processing
 
 	// check to see if projectDirectory was actually specified
 	if projectDirectory == "" {
 		//TODO: switch to custom error here
 		return errors.New("No project directory specified")
-		//fatalLogger.Fatalln("Please specify a project directory")
 	}
 
-	// check to see if projectDirectory is a valid directory
+	// check to see if projectDirectory is a directory
 
-	if !fs.ValidPath(projectDirectory) {
-		// projectDirectory is not a valid path
-		return &fs.PathError{Op: "check", Path: projectDirectory, Err: fs.ErrInvalid}
-	} else {
-		fileSystem := os.DirFS(projectDirectory)
-		fileInfo, err := fs.Stat(fileSystem, projectDirectory)
-		if err != nil {
-			return err
-		}
-		if !fileInfo.IsDir() {
-			// projectDirectory is not a directory
-			return fmt.Errorf("Specified Project Directory %s is not a directory", projectDirectory)
-		}
-
+	fileInfo, err := os.Stat(projectDirectory)
+	if err != nil {
+		return err
+	}
+	if !fileInfo.IsDir() {
+		// projectDirectory is not a directory
+		return fmt.Errorf("Specified Project Directory %s is not a directory", projectDirectory)
 	}
 
 	return nil
