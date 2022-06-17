@@ -17,11 +17,17 @@ var dbPostGres bool
 var dbPostGresDSN string
 
 var projectDirectory string
-var cfgFile []byte
+var cfgData Configuration
+var noDefaultLibraries bool
 
 var debugLogger = log.New(ioutil.Discard, "DEBUG: ", 0)
 var infoLogger = log.New(os.Stderr, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 var fatalLogger = log.New(os.Stderr, "FATAL: ", log.Ldate|log.Ltime|log.Lshortfile)
+
+type Configuration struct {
+	LibraryFiles       []string `yaml:"library_files"`
+	NoDefaultLibraries bool     `yaml:"no_default_libraries"`
+}
 
 func main() {
 	// Init logging and command line stuff
@@ -39,9 +45,10 @@ func main() {
 
 	//var dbPG *gorm.DB
 	var err error
+	// init logging and command line flags
 	err = initialization()
 	if err != nil {
-		fatalLogger.Panicln("Config and flag init failed", err)
+		fatalLogger.Panicln("Logging configuration and  flag init failed", err)
 	}
 	// connect to database
 
@@ -58,31 +65,11 @@ func main() {
 	//}
 	// https://zetcode.com/golang/yaml/
 	// Parse project config file
-	// config file can either be in root or src directory,
-	// and must be named "cdm_config.yaml"
-	// attempt to read from config file in src directory first,
-	// then root directory to prioritize the one in src.
-	cfgFile, err = ioutil.ReadFile(filepath.Join(projectDirectory, "src", "cdm_config.yaml"))
+	err = readConfig()
 	if err != nil {
-		// check to see if error is type patherror, and assume file wasn't found in src directory, so log
-		// and try root directory
-		if e, ok := err.(*os.PathError); ok {
-			debugLogger.Println("couldn't find project config file in src directory", e.Error())
-			cfgFile, err = ioutil.ReadFile(filepath.Join(projectDirectory, "cdm_config.yaml"))
-			if err != nil {
-				fatalLogger.Panicln("Could not find project config file in src or root directory", err)
-			}
-		} else {
-			fatalLogger.Panicln("something strange happened when reading config file, panic!", err)
-		}
-
+		fatalLogger.Panicln("Reading configuration errored", err)
 	}
-	cfgData := make(map[interface{}]interface{})
-
-	err = yaml.Unmarshal(cfgFile, &cfgData)
-	if err != nil {
-		fatalLogger.Panicln("something failed unmarshalling the config file", err)
-	}
+	debugLogger.Printf("%#v\n", cfgData)
 
 }
 
@@ -96,6 +83,7 @@ func initialization() error {
 	flagDBPostGresDSN := flag.String("pgDSN", "", "Data Source Name (DSN) for PostGres database connection")
 	flagDebugLogging := flag.Bool("V", false, "Show debug logs")
 	flagQuiet := flag.Bool("Q", false, "Minimal Output")
+	flagNoDefaultLibs := flag.Bool("D", false, "Do not use default libraries")
 	//TODO: provide flags for different editors and viewing modes
 	flag.Parse()
 
@@ -116,6 +104,7 @@ func initialization() error {
 	//retrieve values from flags and set global variables
 	dbPostGres = *flagDBPostGres
 	dbPostGresDSN = *flagDBPostGresDSN
+	noDefaultLibraries = *flagNoDefaultLibs
 
 	if len(flag.Args()) > 1 {
 		infoLogger.Println("Multiple project directories specified, only using first")
@@ -148,6 +137,57 @@ func initialization() error {
 
 	}
 
+	return nil
+
+}
+
+// config file can either be in root or src directory,
+// and must be named "cdm_config.yaml"
+// config file in src directory has priority over one in root directory
+func readConfig() error {
+	var rootCfgExists bool
+	var srcCfgExists bool
+	var rootCfgFile []byte
+	var srcCfgFile []byte
+
+	srcCfgFile, err := os.ReadFile(filepath.Join(projectDirectory, "src", "cdm_config.yaml"))
+	if err != nil {
+		if errors.Is(err, fs.ErrNotExist) {
+			srcCfgExists = false
+		}
+
+	} else {
+		srcCfgExists = true
+	}
+
+	rootCfgFile, err = os.ReadFile(filepath.Join(projectDirectory, "cdm_config.yaml"))
+	if err != nil {
+		if errors.Is(err, fs.ErrNotExist) {
+			rootCfgExists = false
+		}
+
+	} else {
+		rootCfgExists = true
+	}
+
+	if srcCfgExists {
+		debugLogger.Println("Using src config file")
+		err = yaml.Unmarshal(srcCfgFile, &cfgData)
+	} else if rootCfgExists {
+		debugLogger.Println("Using root config file")
+		err = yaml.Unmarshal(rootCfgFile, &cfgData)
+	} else if rootCfgExists {
+		debugLogger.Println("Using root config file")
+	} else {
+		infoLogger.Println("No config file detected and parsed")
+	}
+
+	if err != nil {
+		return err
+	}
+	if noDefaultLibraries || cfgData.NoDefaultLibraries {
+		debugLogger.Println("default libraries disabled")
+	}
 	return nil
 
 }

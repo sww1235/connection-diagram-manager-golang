@@ -11,7 +11,7 @@ which are parsed and combined as much as possible. If there are unique values
 that conflict, the user will be notified with the file names and line numbers
 that caused the conflict.
 
-In addition, additional files/folders can be specified in the project config
+In addition, additional files can be specified in the project config
 file that can contain a limited subset of top level dictionaries that contain
 library type information such as `connector_type`, `equipment_type`, etc.
 
@@ -40,6 +40,8 @@ directory. If multiple `cdm_config.yaml` files are found, the one in `src` will
 be used to avoid conflict with any other config files placed in the root
 directory such as for linters or automated processing of some kind.
 ```yaml
+library_files: <list>
+no_default_libraries: <bool>
 
 ```
 
@@ -71,13 +73,13 @@ connector_type: # dictionary of all available connector types
 		# pinout information
 		# at least one of the following must be specified
 		pincount: <int>				# if omitted, is set to length of specified list(s)
-		pins: <List>				# if omitted, is autofilled with [1, 2, ..., pincount]
-		pinlabels: <List>			# if omitted, is autofilled with blanks
+		pins: <list>				# if omitted, is autofilled with [1, 2, ..., pincount]
+		pinlabels: <list>			# if omitted, is autofilled with blanks
 		# pin color marks (optional)
-		pincolors: <List>			# list of colors to be assigned
+		pincolors: <list>			# list of colors to be assigned
 									# goes in order of pin count/pin list
 									# if fewer colors are specified than pins, end of list will have no colors specified
-		pin_signal_type: <List> 	# same specs as pincolors
+		pin_signal_type: <list> 	# same specs as pincolors
 
 		# all images are specified as SVG images so they scale.
 		visrep: <svg> 				# svg text (ideally minimized), can be multiline
