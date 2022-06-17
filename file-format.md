@@ -349,7 +349,7 @@ connection:		# list of all connections defined in project, with submappings to i
 									# If connected object contains subobjects, and they are not specifically
 									# connected together, but their parents are, application logic will assume
 									# connection patterns for the subobjects.
-	  end2: <str>					# unique identifier of connected object. Cannot be the same as end1.
+	- end2: <str>					# unique identifier of connected object. Cannot be the same as end1.
 
 ```
 

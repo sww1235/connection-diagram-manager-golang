@@ -53,7 +53,7 @@ func main() {
 	//	}
 	//}
 
-	//
+	// Parse project config file
 }
 
 //set up command line options, logging and configuration
