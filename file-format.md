@@ -38,10 +38,7 @@ user prompted for any additional information needed.
 This file must be named `cdm_config.yaml` and be in the project `src` or root
 directory. If multiple `cdm_config.yaml` files are found, the one in `src` will
 be used to avoid conflict with any other config files placed in the root
-directory such as for linters or automated processing of some kind. If multiple
-`cdm_config.yaml` files are found in either the `src` or root directory, the
-application will error out and the user will be notified.
-
+directory such as for linters or automated processing of some kind.
 ```yaml
 
 ```
