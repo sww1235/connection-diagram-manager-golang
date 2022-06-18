@@ -187,8 +187,8 @@ cable_type: # dictonary of all available raw cable types.
 		width: <float>				# width of cable if oval or siamese
 		diameter: <float>			# diameter of cable if circular
 
-		layer: # dictionary of shields and insulation layers on outside of cable
-			layer: <int>			# counted from inside to outside of cable
+		layer: # list of shields and insulation layers on outside of cable
+			layer_nbr: <int>			# counted from inside to outside of cable
 			type: <str>				# insulation, semiconductor, shield, screen, concentric neutral
 			material: <str>
 			volt_rating: <float>	# voltage rating for insulation layer
