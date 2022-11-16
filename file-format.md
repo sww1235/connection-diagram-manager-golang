@@ -57,7 +57,7 @@ connector_type: # dictionary of all available connector types
 		manufacturer: <str>			# manufacturer name
 		model: <str>				# connector model description
 		description: <str>			# free text field for larger descriptions of connectors
-		mounting_type: <str>		# cable, pcb through hole, pcbsurface mount, panel
+		mounting_type: <str>		# cable, pcb through hole, pcb surface mount, panel
 		panel_cutout: <str>			# D, A, etc. optional
 		pn: <str>					# [internal] part number
 		mpn: <str>					# manufacturer part number
@@ -70,8 +70,8 @@ connector_type: # dictionary of all available connector types
 		diameter: <float>			# diameter of circular connector in mm
 
 		# pinout information
-		# at least one of the following must be specified
 		pincount: <int>				# if omitted, is set to length of specified list(s)
+		# at least one of the following must be specified
 		pins: <list>				# if omitted, is autofilled with [1, 2, ..., pincount]
 		pinlabels: <list>			# if omitted, is autofilled with blanks
 		# pin color marks (optional)
@@ -152,12 +152,12 @@ wire_type:	# dictonary of all available wire types.
 		mpn: <str>					# manufacturer part number
 		supplier: <str>				# supplier
 		spn: <str>					# supplier part number
+		insulated: <bool>
 		insulation_material: <str>	# PVC, Nylon, thermoplastic, etc
 		wire_type_code: <str>		# THWN, XHHN, etc
 		cross_sect_area: <float>	# specified in mm^2.
 		stranded: <bool>
 		num_strands: <int>			# number of strands if cable is stranded. defaults to 1 if cable is solid
-		strand_cross_area: <float>	# cross sectional area of individual strand
 		insul_volt_rating: <float>	# voltage rating of insulation.
 		insul_temp_rating: <float>	# temperature rating of insulation. Specified in degrees centigrade.
 
@@ -201,32 +201,28 @@ term_cable_type:	# dictionary of available manufactuered cables,
 					# a fan out or split with multiple connectors
 					# connectors defined on a term_cable are accessed based on dot notation
 					# wire, cable and term_cable designators must all be unique
-	<str>:			# unique ID of term cable type
-		manufacturer: <str>			# Manufacturer of term_cable
-		pn: <str>					# [internal] part number
-		mpn: <str>					# manufacturer part number
-		supplier: <str>				# supplier
-		spn: <str>					# supplier part number
-		cable:						# ID of cable or wire type
-		nom_length: <float>			# nominal length in meters
-		length: <float>				# actual length in meters
-		end1:						# dictionary of connectors attached to term cable
-			type: <str>				# ID of connector type
-			autoTerm: <str>			# auto termination method, current available values are:
-									# `pin_core` which matches numbered or unique named pins and cores with each other
-									# others to be thought of at a later date.
-			termination:			# dictionary of core to connector pin mappings for each connector
-									# either auto termination method or manual termination method
-									# must be specified
-		end2:						# dictionary of connectors attached to term cable
-			type: <str>				# ID of connector type
-			autoTerm: <str>			# auto termination method, current available values are:
-									# `pin_core` which matches numbered or unique named pins and cores with each other
-									# others to be thought of at a later date.
-			termination:			# dictionary of core to connector pin mappings for each connector
-									# either auto termination method or manual termination method
-									# must be specified
+	- manufacturer: <str>		# Manufacturer of term_cable
+	  pn: <str>					# [internal] part number
+	  mpn: <str>				# manufacturer part number
+	  supplier: <str>			# supplier
+	  spn: <str>				# supplier part number
+	  cable: <str>				# ID of cable. Only one of wire or cable can be specified
+	  wire: <str>				# ID of wire
+	  nom_length: <float>		# nominal length in meters
+	  length: <float>			# actual length in meters
+	  end1:						# dictionary of connectors attached to term cable
+		- type: <str>			# ID of connector type
+		  termination:			# dictionary of core to connector pin mappings for each connector
+								# manual termination between pin and core must be specified
+			- core: <str>
+			  pin: <str>
 
+	  end2:						# dictionary of connectors attached to term cable
+		- type: <str>			# ID of connector type
+		  termination:			# dictionary of core to connector pin mappings for each connector
+								# manual termination between pin and core must be specified
+			- core: <str>
+			  pin: <str>
 
 
 location_type:	# dictionary of available location types
