@@ -18,7 +18,7 @@ var dbPostGres bool
 var dbPostGresDSN string
 
 var projectDirectory string
-var cfgData Configuration
+var cfgData configuration
 var noDefaultLibraries bool
 
 var connectorTypeDict = make(map[string]ConnectorType)
@@ -27,14 +27,14 @@ var connectorTypeDict = make(map[string]ConnectorType)
 //var pathwayTypeDict PathwayTypes
 var wireTypeDict = make(map[string]WireType)
 var cableTypeDict = make(map[string]CableType)
-var TermCableTypeDict = make(map[string]TermCableType)
-var LocationTypeDict = make(map[string]LocationType)
+var termCableTypeDict = make(map[string]TermCableType)
+var locationTypeDict = make(map[string]LocationType)
 
 var debugLogger = log.New(ioutil.Discard, "DEBUG: ", 0)
 var infoLogger = log.New(os.Stderr, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 var fatalLogger = log.New(os.Stderr, "FATAL: ", log.Ldate|log.Ltime|log.Lshortfile)
 
-type Configuration struct {
+type configuration struct {
 	LibraryFiles       []string `yaml:"library_files"`
 	NoDefaultLibraries bool     `yaml:"no_default_libraries"`
 }
@@ -82,8 +82,8 @@ func main() {
 	debugLogger.Printf("%#+v\n", cfgData)
 
 	err = readData()
-	fmt.Println(len(TermCableTypeDict))
-	fmt.Printf("%+v\n", TermCableTypeDict)
+	fmt.Println(len(termCableTypeDict))
+	fmt.Printf("%+v\n", termCableTypeDict)
 
 	if err != nil {
 		fatalLogger.Panicln("Reading data errored", err)
